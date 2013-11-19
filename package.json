@@ -1,0 +1,10 @@
+{
+	"name"		: "sso-test"
+,	"version"	: "0.0.1"
+,	"main"		: "src/main.js"
+,	"dependencies"	: {
+		"cansecurity"	: "x",
+		"express": "x"
+	}
+}
+

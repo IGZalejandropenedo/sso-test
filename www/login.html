@@ -1,0 +1,58 @@
+<html>
+	<head>
+			<title>
+					Esparto Login
+			</title>
+			<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+			<script type="text/javascript">
+				$(document).ready(function(){
+					$("#submit").click(function(){
+						$.ajax({
+							type:'get',
+							url:'http://localhost:3000/logged',
+							headers: {
+								'Authorization': 'Basic ' + window.btoa($("#username").val() + ":" + $("#password").val())
+							},
+							success: function(data){
+								$('#content').html(arguments);
+							},
+							error: function(){
+								$('#content').html(arguments);
+							}
+						});
+					});
+				});
+			</script>
+	</head>
+	<body>
+		<h2>Esparto Login</h2>
+		<h1>This is esparto!</h1>
+		<img src="http://www.pisitoenmadrid.com/fotolog/images/20090325163658_this-is-sparto.jpg" />
+		<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					User Name:
+				</td>
+				<td>
+					<input type="text" name="username" id="username">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Password:
+				</td>
+				<td>
+					<input type="text" name="password" id="password">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button id="submit">Login</button>
+				</td>
+				<td>
+					<div id="content"></div>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
