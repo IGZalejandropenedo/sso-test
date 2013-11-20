@@ -8,17 +8,17 @@
 				$(document).ready(function(){
 					$("#submit").click(function(){
 						$.ajax({
-							type:'get',
-							url:'http://localhost:3000/logged',
+							url:'http://localhost:3000/login',
 							headers: {
 								'Authorization': 'Basic ' + window.btoa($("#username").val() + ":" + $("#password").val())
-							},
-							success: function(data){
-								$('#content').html(arguments);
-							},
-							error: function(){
-								$('#content').html(arguments);
 							}
+						}).done(function(data){
+							console.log('success', arguments);
+							//$('#content').html(arguments);
+							window.location = "/catalog.html"
+						}).fail(function(){
+							console.log('fail', arguments);
+							$('#content').html(arguments[2]);
 						});
 					});
 				});

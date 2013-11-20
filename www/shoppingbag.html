@@ -1,0 +1,49 @@
+<html>
+	<head>
+			<title>
+					Esparto Main
+			</title>
+			<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+			<script type="text/javascript">
+
+				function showCatalog(bag){ 
+					var table = $("#content");
+					table.html("");
+
+					var items = bag.items;
+
+					for(var i = 0, L = items.length; i < L; i++) {
+						var row = $("<tr></tr>");
+						row.append("<td>" + items[i] + "</td>");
+						table.append(row);
+					}
+				}
+				$(document).ready(function(){
+					$.ajax({
+						url:'http://localhost:3000/shoppingbag',
+					}).done(function(data){
+						showCatalog(data);
+					}).fail(function(){
+						//window.location = "/login.html";
+						$("#content").html(arguments[2]);
+					});
+				});
+			</script>
+	</head>
+	<body>
+		<table border="0" cellpadding="0" cellspacing="5">
+			<tr>
+				<td>
+					<a href='/catalog.html' >Catalog</a>
+				</td>
+				<td>
+					<a href='/profile.html' > Profile </a>
+				</td>
+			</tr>
+		</table>
+		<h2>Esparto Loot Bag</h2>
+		<h1>This is esparto!</h1>
+		<table id="content" border="0" cellpadding="0" cellspacing="5">
+		</table>
+	</body>
+</html>

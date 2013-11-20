@@ -1,23 +1,23 @@
-var user = {},
+var self = {},
 	userStore = [
 	{
 		username: 'admin',
 		password: 'admin',
-		roles: ['admin', 'user']
-	},
-	{
-		username: 'superadmin',
-		password: 'superadmin',
-		roles: ['superadmin', 'admin', 'user']
+		roles: ['admin']
 	},
 	{
 		username: 'user1',
 		password: 'user1',
-		roles: ['user']
+		roles: []
+	},
+	{
+		username: 'user2',
+		password: 'user2',
+		roles: []
 	}
 ];
 
-user.get = function(username) {
+self.get = function(username) {
 	for(var i in userStore) {
 		if(userStore[i].username === username) {
 			return userStore[i];
@@ -26,10 +26,9 @@ user.get = function(username) {
 	return null;
 };
 
-user.validate = function(username, password, callback) {
-	console.log(arguments);
-	var user = user.get(username);
-	if(user.username === username) {
+self.validate = function(username, password, callback) {
+	var user = self.get(username);
+	if(user && user.username === username) {
 		if(password) {
 			if(user.password === password) {
 				return callback(true, user, user.username, user.password);
@@ -43,4 +42,6 @@ user.validate = function(username, password, callback) {
 		callback(false, null, 'invalid user');
 	}
 };
+
+module.exports = self;
 
