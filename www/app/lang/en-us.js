@@ -1,0 +1,3 @@
+{
+	"APP" : "Espartan Shop"
+}

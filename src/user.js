@@ -32,19 +32,23 @@ self.validate = function(username, password, callback) {
 	if(user && user.username === username) {
 		if(password) {
 			if(user.password === password) {
-				var shasum = crypto.createHash('sha1');
-				shasum.update(user.password);
-				return callback(true, user, user.username, shasum.digest('hex'));
+				return callback(true, user, user.username, hash(user.password));
 			} else {
 				return callback(false, null, 'invalid password');
 			}
 		} else {
-			return callback(true, user, user.username);
+			return callback(true, user, user.username, hash(user.password));
 		}
 	} else {
 		callback(false, null, 'invalid user');
 	}
 };
+
+function hash(content) {
+	var shasum = crypto.createHash('sha1');
+	shasum.update(content);
+	return shasum.digest('hex');
+}
 
 module.exports = self;
 
