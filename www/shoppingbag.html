@@ -6,11 +6,13 @@
 			<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 			<script type="text/javascript">
 
-				function showCatalog(bag){ 
+				function showItems(items){ 
 					var table = $("#content");
 					table.html("");
 
-					var items = bag.items;
+					if(items.length === 0) {
+						return table.html("No items");
+					}
 
 					for(var i = 0, L = items.length; i < L; i++) {
 						var row = $("<tr></tr>");
@@ -22,7 +24,7 @@
 					$.ajax({
 						url:'http://localhost:3000/shoppingbag',
 					}).done(function(data){
-						showCatalog(data);
+						showItems(data);
 					}).fail(function(){
 						//window.location = "/login.html";
 						$("#content").html(arguments[2]);
@@ -38,6 +40,12 @@
 				</td>
 				<td>
 					<a href='/profile.html' > Profile </a>
+				</td>
+				<td>
+					<a href='/shoppingbag/user1' > User1 Secret Shopping Bag </a>
+				</td>
+				<td>
+					<a href='/logout' > Logout </a>
 				</td>
 			</tr>
 		</table>

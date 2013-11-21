@@ -24,7 +24,8 @@
 					}).done(function(data){
 						showCatalog(data);
 					}).fail(function(){
-						window.location = "/login.html";
+						//window.location = "/login.html";
+						$("#content").html(arguments[2]);
 					});
 				});
 			</script>
@@ -40,6 +41,9 @@
 				</td>
 				<td>
 					<a href='/profile/user1' > User1 Secret Profile </a>
+				</td>
+				<td>
+					<a href='/logout' > Logout </a>
 				</td>
 			</tr>
 		</table>

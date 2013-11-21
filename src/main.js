@@ -30,9 +30,16 @@ var fs = require('fs'),
 	port = 3000;
 
 app.use( express.static(__dirname + '/../www') );
-app.use(express.bodyParser());
+
+// Express middlewares for parssing request data
+app.use(express.json());
+app.use(express.urlencoded());
+//app.use(express.bodyParser());
 app.use(express.cookieParser());
+
+// Express session manager
 app.use(express.session({secret: secret}));
+
 // Cansecurity user validation middleware
 app.use(cs.validate);
 app.use(app.router);
@@ -43,6 +50,10 @@ app.use(express.errorHandler({
 
 // Public paths
 app.get('/login', sendOk);
+app.get('/logout', function(req, res){
+	console.log(res);
+	res.send(200);
+});
 
 // Only for logged in users and restricted to self or certain roles
 app.get('/catalog', cs.restrictToLoggedIn, function(req, res){
@@ -56,16 +67,8 @@ app.get('/profile/:username', cs.restrictToSelfOrRoles(['admin']), function(req,
 	res.send(profile);
 });
 
-app.get('/shoppingbag', cs.restrictToField('owner', getShoppingBag), function(req, res){
-	var shoppingBag = bag.get(cs.getUser(req).username);
-	res.send(shoppingBag ? shoppingBag.items : []);
-});
-app.get('/shoppingbag/:username', cs.restrictToFieldOrRoles('owner', ['admin'],getShoppingBagByUserParam), function(req, res){
-	var shoppingBag = bag.get(req.params.username);
-	res.send(shoppingBag ? shoppingBag.items : []);
-});
-
-
+app.get('/shoppingbag', cs.restrictToField('owner', getShoppingBag), sendShoppingBag);
+app.get('/shoppingbag/:username', cs.restrictToFieldOrRoles('owner', ['admin'], getShoppingBag), sendShoppingBag);
 
 // Restricted to certain roles
 app.get('/admin', cs.restrictToRoles(['admin']), function(req, res){
@@ -77,15 +80,22 @@ function sendOk(req, res, next){
 }
 
 function getShoppingBag(req, res) {
-	var user = cs.getUser(req);
-	var b = bag.get(user.username);
-	return b || {owner: user.username};
+	var username = req.params.username || cs.getUser(req).username;
+	var b = bag.get(username);
+	console.log(">>>> getShoppingBag", username, b);
+	req.shoppingBag = b;
+	return b || {owner: username};
 }
 
-function getShoppingBagByUserParam(req, res) {
-	var user = req.param.username;
-	var b = bag.get(user);
-	return b || {owner: user};
+function sendShoppingBag(req, res) {
+	if(req.shoppingBag) {
+		return res.send(req.shoppingBag);
+	}
+	else {
+		var username = req.params.username || cs.getUser(req).username;
+		var shoppingBag = bag.get(username);
+		res.send(shoppingBag ? shoppingBag.items : []);
+	}
 }
 
 console.log('Application listening on port', port);

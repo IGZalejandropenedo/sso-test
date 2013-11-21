@@ -12,8 +12,20 @@
 							headers: {
 								'Authorization': 'Basic ' + window.btoa($("#username").val() + ":" + $("#password").val())
 							}
-						}).done(function(data){
+						}).done(function(data, status, xhr){
 							console.log('success', arguments);
+							var headers = xhr.getAllResponseHeaders().split("\n");
+							var h = {};
+							for (var i = 0, L = headers.length; i < L; i++) {
+								if(headers[i].length === 0) continue;
+								var colonPos = headers[i].indexOf(':');
+								h[headers[i].substring(0, colonPos)] = headers[i].substring(colonPos+1, headers[i].length);
+							}
+							var head = {};
+							head['X-CS-Auth'] = h['X-CS-Auth']  
+							$.ajaxSetup({
+								headers: head
+							});
 							//$('#content').html(arguments);
 							window.location = "/catalog.html"
 						}).fail(function(){

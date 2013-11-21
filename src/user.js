@@ -1,4 +1,5 @@
-var self = {},
+var crypto = require('crypto'),
+	self = {},
 	userStore = [
 	{
 		username: 'admin',
@@ -31,7 +32,9 @@ self.validate = function(username, password, callback) {
 	if(user && user.username === username) {
 		if(password) {
 			if(user.password === password) {
-				return callback(true, user, user.username, user.password);
+				var shasum = crypto.createHash('sha1');
+				shasum.update(user.password);
+				return callback(true, user, user.username, shasum.digest('hex'));
 			} else {
 				return callback(false, null, 'invalid password');
 			}

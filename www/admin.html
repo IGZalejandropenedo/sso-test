@@ -11,7 +11,7 @@
 					}).done(function(data){
 						$("#content").html(JSON.stringify(data));
 					}).fail(function(){
-						window.location = "/catalog.html";
+						$('#content').html(arguments[2]);
 					});
 				});		
 			</script>
@@ -27,6 +27,9 @@
 				</td>
 				<td>
 					<a href='/profile/user1' > User1 Secret Profile </a>
+				</td>
+				<td>
+					<a href='/logout' > Logout </a>
 				</td>
 			</tr>
 		</table>
