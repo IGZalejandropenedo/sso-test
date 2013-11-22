@@ -27,6 +27,10 @@ self.get = function(username) {
 	return null;
 };
 
+self.getAll = function() {
+	return userStore;
+};
+
 self.validate = function(username, password, callback) {
 	var user = self.get(username);
 	if(user && user.username === username) {

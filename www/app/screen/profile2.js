@@ -1,12 +1,12 @@
 iris.screen(function(self) {
 	var content = null;
 	self.create = function() {
-		self.tmpl(iris.path.screen.admin.html);
+		self.tmpl(iris.path.screen.profile2.html);
 		content = self.get('content');
 	};
 
 	self.awake = function(){
-		iris.resource(iris.path.resource.user.js).getAll()
+		iris.resource(iris.path.resource.user.js).getProfile('user1')
 		.done(function(data){
 			content.html(JSON.stringify(data));
 		})
@@ -14,4 +14,4 @@ iris.screen(function(self) {
 			content.html(arguments[2]);
 		});
 	};
-}, iris.path.screen.admin.js);
+}, iris.path.screen.profile2.js);

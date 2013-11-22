@@ -2,20 +2,14 @@ iris.screen(function(self) {
 	var content = null;
 	self.create = function() {
 		self.tmpl(iris.path.screen.catalog.html);
-
-		console.log('Catalog created');
-
 		content = self.get("content");
 	};
 
 	self.awake = function() {
-		console.log('Catalog awaken');
-
 		iris.resource(iris.path.resource.shop.js).getCatalog(
 			showCatalog,
 			function(data){
-				console.log(data);
-				//content.html(data);
+				content.html(data);
 			}
 		);
 	};

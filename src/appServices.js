@@ -13,10 +13,7 @@ var fs = require('fs'),
 	cs = cansecurity.init({
 		// Function to validate if the user is logged in
 		// Only executed if there is an Authorization: Basic base64(user:password) header or a Token
-		validate: function(username, password, callback) {
-			console.log('service', arguments);
-			user.validate(username, password, callback);
-		},
+		validate: user.validate,
 		// Key to cypher the session
 		sessionKey: secret,
 		// Where in the user object are the username and roles (default: id, roles)
@@ -45,7 +42,7 @@ app.use(express.cookieParser());
 app.use(cs.validate);
 app.use(function(req, res, next){
 	res.header('Access-Control-Allow-Origin',"*");
-	res.header('Access-Control-Allow-Headers',"X-CS-Auth");
+	res.header('Access-Control-Allow-Headers',"X-CS-Auth,X-CS-User");
 	next();
 });
 app.use(app.router);
@@ -70,7 +67,6 @@ function sendOk(req, res, next){
 function getShoppingBag(req, res) {
 	var username = req.params.username || cs.getUser(req).username;
 	var b = bag.get(username);
-	console.log(">>>> getShoppingBag", username, b);
 	req.shoppingBag = b;
 	return b || {owner: username};
 }

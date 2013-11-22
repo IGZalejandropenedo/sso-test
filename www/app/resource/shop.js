@@ -1,8 +1,6 @@
 iris.resource(function(self){
 
 	self.getCatalog = function(success, fail){
-		console.log("getCatalog", iris.service.shop);
-
 		var h = {};
 		iris.ajax({
 			url: iris.service.shop + '/catalog'
@@ -12,6 +10,17 @@ iris.resource(function(self){
 		}).fail(function(){
 			console.log(arguments);
 			console.log("ko");
+			fail(arguments[2]);
+		});
+	};
+
+	self.getBag = function(success, fail){
+		var h = {};
+		iris.ajax({
+			url: iris.service.shop + '/shoppingbag'
+		}).done(function(data, status, xhr){
+			success(data);
+		}).fail(function(){
 			fail(arguments[2]);
 		});
 	};

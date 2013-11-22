@@ -6,6 +6,7 @@ iris.path = {
 		"login" : { "js":"screen/login.js", "html":"screen/login.html"},
 		"logout" : { "js":"screen/logout.js", "html":"screen/logout.html"},
 		"profile" : { "js":"screen/profile.js", "html":"screen/profile.html"},
+		"profile2" : { "js":"screen/profile2.js", "html":"screen/profile2.html"},
 		"welcome" : { "js":"screen/welcome.js", "html":"screen/welcome.html"}
 	},
 	"ui": {

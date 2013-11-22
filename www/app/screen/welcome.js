@@ -9,7 +9,8 @@ iris.screen(function(self) {
 				[ 'catalog', iris.path.screen.catalog.js],
 				[ 'login', iris.path.screen.login.js],
 				[ 'logout', iris.path.screen.logout.js],
-				[ 'profile', iris.path.screen.profile.js]
+				[ 'profile', iris.path.screen.profile.js],
+				[ 'profile2', iris.path.screen.profile2.js]
 			]
 		);
 	};
