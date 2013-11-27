@@ -14,5 +14,10 @@ npm install
 
 ### Ejecutar
 ```
-node main.js
+node appAuth.js
+node appServices.js
+```
+Y navegar a:
+```
+http://localhost:3000
 ```
