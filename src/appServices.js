@@ -1,5 +1,6 @@
 var fs = require('fs'),
 	express = require('express'),
+	request = require('request'),
 	// Cansecurity base module
 	cansecurity = require('cansecurity'),
 
@@ -13,7 +14,19 @@ var fs = require('fs'),
 	cs = cansecurity.init({
 		// Function to validate if the user is logged in
 		// Only executed if there is an Authorization: Basic base64(user:password) header or a Token
-		validate: user.validate,
+		validate: function(username, password, callback){
+			var options = {
+				url:"http://localhost:2999/validate", 
+				json: {
+					username: username, 
+					password:password 
+				}
+			};
+
+			request.post(options, function(error, response, body){
+				callback(body.success, body.user, body.username, body.hash);
+			});
+		},
 		// Key to cypher the session
 		sessionKey: secret,
 		// Where in the user object are the username and roles (default: id, roles)
@@ -35,12 +48,23 @@ app.use(express.urlencoded());
 app.use(express.cookieParser());
 //app.use(express.bodyParser());
 
+
 // Express session manager
-//app.use(express.session({secret: secret}));
+/*app.use(
+	express.session({
+		secret: secret
+	})
+);
+app.use(function(req, res, next){
+	console.log('>>>>> cookies', req.cookies);
+	console.log('>>>>> session', req.session);
+	next();
+});*/
 
 // Cansecurity user validation middleware
 app.use(cs.validate);
 app.use(function(req, res, next){
+	res.header('Allow', 'GET, POST; PUT, DELETE, HEAD');
 	res.header('Access-Control-Allow-Origin',"*");
 	res.header('Access-Control-Allow-Headers',"X-CS-Auth,X-CS-User");
 	next();

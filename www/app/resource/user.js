@@ -13,7 +13,8 @@ iris.resource(function(self){
 			authHeader['X-CS-Auth'] = CSAuth;
 			console.log(authHeader);
 			$.ajaxSetup({
-				headers: authHeader
+				headers: authHeader,
+				crossDomain: true
 			});
 			success(data);
 		}).fail(function(){

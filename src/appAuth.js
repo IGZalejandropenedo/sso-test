@@ -1,10 +1,10 @@
-var fs = require('fs'),
-	express = require('express'),
+var express = require('express'),
 	// Cansecurity base module
 	cansecurity = require('cansecurity'),
 
 	user = require('./user'),
-	app = express(),
+	publicApp = express(),
+	privateApp = express(),
 	secret = 'this_is_esparto!',
 
 	// Initialized Cansecurity Module
@@ -27,48 +27,58 @@ var fs = require('fs'),
 	}),
 	port = 3000;
 
-app.use( express.static(__dirname + '/../www') );
+publicApp.use( express.static(__dirname + '/../www') );
 
 // Express middlewares for parssing request data
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(express.cookieParser());
-//app.use(express.bodyParser());
+publicApp.use(express.json());
+publicApp.use(express.urlencoded());
+publicApp.use(express.cookieParser());
+//publicApp.use(express.bodyParser());
 
 // Express session manager
-//app.use(express.session({secret: secret}));
+/*publicApp.use(
+	express.session({
+		secret: secret
+	})
+);
+publicApp.use(function(req, res, next){
+	console.log('>>>>> cookies', req.cookies);
+	console.log('>>>>> session', req.session);
+	next();
+});*/
 
 // Cansecurity user validation middleware
-app.use(cs.validate);
-app.use(function(req, res, next){
+publicApp.use(cs.validate);
+publicApp.use(function(req, res, next){
+	res.header('Allow', 'GET, POST; PUT, DELETE, HEAD');
 	res.header('Access-Control-Allow-Origin',"*");
 	res.header('Access-Control-Allow-Headers',"X-CS-Auth,X-CS-User");
 	next();
 });
-app.use(app.router);
-app.use(express.errorHandler({
+publicApp.use(publicApp.router);
+publicApp.use(express.errorHandler({
 	dumpExceptions : true,
 	showStack : true
 }));
 
 // Public paths
-app.get('/login', sendOk);
-app.get('/logout', function(req, res){
+publicApp.get('/login', sendOk);
+publicApp.get('/logout', function(req, res){
 	cs.clear(req, res);
 	res.send(200);
 });
 
 // Only for logged in users and restricted to self or certain roles
-app.get('/profile', cs.restrictToLoggedIn, function(req, res){
+publicApp.get('/profile', cs.restrictToLoggedIn, function(req, res){
 	res.send(cs.getUser(req));
 });
-app.get('/profile/:username', cs.restrictToSelfOrRoles(['admin']), function(req, res){
+publicApp.get('/profile/:username', cs.restrictToSelfOrRoles(['admin']), function(req, res){
 	var profile = user.get(req.params.username);
 	res.send(profile);
 });
 
 // Restricted to certain roles
-app.get('/admin', cs.restrictToRoles(['admin']), function(req, res){
+publicApp.get('/admin', cs.restrictToRoles(['admin']), function(req, res){
 	res.send(user.getAll());
 });
 
@@ -76,5 +86,36 @@ function sendOk(req, res, next){
 	res.send(200,{});
 }
 
-console.log('Auth listening on port', port);
-app.listen(port);
+
+privateApp.use(express.json());
+privateApp.use(express.urlencoded());
+privateApp.use(express.cookieParser());
+//privateApp.use(express.bodyParser());
+
+privateApp.use(privateApp.router);
+privateApp.use(express.errorHandler({
+	dumpExceptions : true,
+	showStack : true
+}));
+
+privateApp.post("/validate", function(req, res){
+	//console.log(req.body);
+	var username = req.body.username;
+	var password = req.body.password;
+
+	user.validate(username, password, function(success, user, username, hash){
+		var result =  {
+			success: success,
+			user: user,
+			username: username,
+			hash:hash
+		};
+
+		res.send(200, result);
+	});
+});
+
+console.log('Auth public listening on port', port);
+publicApp.listen(port);
+console.log('Auth private listening on port', port - 1);
+privateApp.listen(port - 1);

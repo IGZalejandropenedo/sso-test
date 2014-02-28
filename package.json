@@ -4,7 +4,8 @@
 ,	"main"		: "src/main.js"
 ,	"dependencies"	: {
 		"cansecurity"	: "x",
-		"express": "x"
+		"express": "x",
+		"request": "x"
 	}
 }
 
