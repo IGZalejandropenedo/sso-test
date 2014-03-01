@@ -16,6 +16,18 @@ iris.screen(function(self) {
 	};
 
 	self.awake = function () {
+		var cookie = $.cookie('ryu-auth');
+		if( cookie ) {
+			var authHeader = {
+				'X-CS-Auth' : cookie
+			};
+			
+			$.ajaxSetup({
+				headers: authHeader,
+				crossDomain: true
+			});
+		}
+
 		if ( !document.location.hash ) {
 			iris.navigate('#/login');
 		}

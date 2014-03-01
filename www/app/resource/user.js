@@ -12,6 +12,8 @@ iris.resource(function(self){
 			//authHeader['X-CS-Auth'] = window.btoa(CSAuth);
 			authHeader['X-CS-Auth'] = CSAuth;
 			console.log(authHeader);
+			
+			$.cookie('ryu-auth', CSAuth, { expires: 30, path: '/'});
 			$.ajaxSetup({
 				headers: authHeader,
 				crossDomain: true
