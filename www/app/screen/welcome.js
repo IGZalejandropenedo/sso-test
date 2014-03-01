@@ -26,9 +26,10 @@ iris.screen(function(self) {
 				headers: authHeader,
 				crossDomain: true
 			});
+			iris.navigate('#/catalog');
 		}
 
-		if ( !document.location.hash ) {
+		if ( !document.location.hash || !cookie) {
 			iris.navigate('#/login');
 		}
 	};

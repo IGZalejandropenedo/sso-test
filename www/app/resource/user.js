@@ -25,6 +25,7 @@ iris.resource(function(self){
 	};
 
 	self.logout = function(success, fail){
+		$.removeCookie('ryu-auth', { path: '/' });
 		iris.ajax({
 			url: iris.service.user + '/logout'
 		}).done(function(data, status, xhr){
